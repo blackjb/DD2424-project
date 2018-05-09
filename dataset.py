@@ -55,3 +55,6 @@ class Dataset:
         encoder = OneHotEncoder()
         onehot_labels = encoder.fit_transform(self.validation_labels.reshape(-1, 1))
         return onehot_labels
+
+    def number_of_labels(self):
+        return len(self.labels)

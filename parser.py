@@ -23,7 +23,7 @@ class ImageNetParser(Parser):
     """
     Parser for the image net dataset
     """
-    def create_dataset(self, training_filename, validation_filename, word_filename, root_dir):
+    def create_dataset(self, training_filename, validation_filename, word_filename, root_dir, max_cat_size):
         dataset = Dataset()
         train_file = open(training_filename)
         val_file = open(validation_filename)
@@ -38,12 +38,16 @@ class ImageNetParser(Parser):
         for line in train_file:
             dir = os.path.join(root_dir, "train", line.strip(), "images")
             labels.append(line.strip())
+            i = 0
             for image in os.listdir(dir):
                 if image[0] == '.':
                     continue
+                if i == max_cat_size:
+                    break
                 image_filename = os.path.join(dir, image)
                 training_images.append(self.read_image(image_filename))
                 training_labels.append(len(labels)-1)
+                i += 1
 
 
         # Import validation images
@@ -92,14 +96,5 @@ class ImageNetParser(Parser):
 
         #make img array
         img = np.asarray(img)
-
-        # Apply preprocessers
-        for pp in self.preprocessors:
-            pp.transform(img)
-
-
-        #flatten images
-        shape = img.shape
-        img = np.reshape(img, (shape[0]*shape[1]*shape[2]))
 
         return img
