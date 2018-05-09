@@ -1,5 +1,6 @@
 import pickle
 import numpy as np
+from sklearn.preprocessing import OneHotEncoder
 
 class Dataset:
     def __init__(self):
@@ -40,14 +41,9 @@ class Dataset:
         return self.training_labels
 
     def get_training_labels_onehot(self):
-        onehot_labels = [None for _ in range(len(self.training_labels))]
-        for label in self.training_labels:
-            onehot_vec = np.zeros(len(self.labels))
-            onehot_vec[label] = 1
-            onehot_vec = np.asarray(onehot_vec)
-            onehot_labels[label] = onehot_vec
-        labels = np.asarray(onehot_labels)
-        return labels
+        encoder = OneHotEncoder()
+        onehot_labels = encoder.fit_transform(self.training_labels.reshape(-1, 1))
+        return onehot_labels
 
     def get_validation_data(self):
         return self.validation_images
@@ -56,11 +52,6 @@ class Dataset:
         return self.validation_labels
 
     def get_validation_labels_onehot(self):
-        onehot_labels = [None for _ in range(len(self.validation_labels))]
-        for label in self.validation_labels:
-            onehot_vec = np.zeros(len(self.labels))
-            onehot_vec[label] = 1
-            onehot_vec = np.asarray(onehot_vec)
-            onehot_labels[label] = onehot_vec
-        labels = np.asarray(onehot_labels)
-        return labels
+        encoder = OneHotEncoder()
+        onehot_labels = encoder.fit_transform(self.validation_labels.reshape(-1, 1))
+        return onehot_labels
