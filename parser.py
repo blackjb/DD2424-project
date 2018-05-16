@@ -96,5 +96,6 @@ class ImageNetParser(Parser):
 
         #make img array
         img = np.asarray(img)
+        im.close()
 
         return img

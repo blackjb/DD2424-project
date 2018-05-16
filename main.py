@@ -1,10 +1,10 @@
 import os
+
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
-import numpy as np
+
 from parser import ImageNetParser
-from dataset import Dataset
-from models import linear_model, conv_model
+import models
 
 def main():
     # Remove tensorflow warnings
@@ -17,7 +17,7 @@ def main():
     train_filename = os.path.join(root_dir, "wnids.txt")
     validation_filename = os.path.join(root_dir, "val/val_annotations.txt")
 
-    max_cat_size = 100
+    max_cat_size = 400
 
     # Parase images and create dataset
     parser = ImageNetParser()
@@ -28,13 +28,19 @@ def main():
 
     # Fetch training data
     x_train = dataset.get_training_data()
+    x_train = x_train.astype('float32')/255.0
     y_train = dataset.get_training_labels()
     x_test = dataset.get_validation_data()
+    x_test = x_test.astype('float32')/255.0
     y_test = dataset.get_validation_labels()
 
+    # Set input and label dimensionality variables
+    input_dims = x_train.shape[1:]
     nb_labels = dataset.number_of_labels()
+    print("input_dims: ", input_dims)
+    print("nb_labels: ", nb_labels)
 
-
+    dataset = None # TODO remove? trying to clear memory
 
 
     # Get onehot label representation
@@ -61,37 +67,41 @@ def main():
     validation_generator = ImageDataGenerator(
         featurewise_center=True,
         featurewise_std_normalization=True,
-        rotation_range=20,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
+        rotation_range=0,
+        width_shift_range=0,
+        height_shift_range=0,
         horizontal_flip=False)
-    validation_generator.fit(x_test)
-
-    # Set input and label dimensionality variables
-    input_dims = x_train.shape[1:]
-    nb_labels = y_train.shape[1]
-    print("input_dims: ", input_dims)
-    print("nb_labels: ", nb_labels)
-
-
+    validation_generator.fit(x_train)
 
     # Create model
-    #model = linear_model(input_dims, nb_labels)
-    model = conv_model(input_dims, nb_labels)
-    model.summary()
+    model_list = [
+                    models.alexnet_model1(input_dims, nb_labels)]
 
-    epochs = 1
+    # Set training hyper-parameteres
+    epochs = 50
     batch_size = 32
-    # Train model
-    model.fit_generator(train_generator.flow(x_train, y_train, batch_size=batch_size),
-                        steps_per_epoch=len(x_train) / batch_size,
-                        validation_data=(x_test, y_test),
-                        epochs=epochs)
 
-    eval = model.evaluate(x_test,
-                   y_test,
-                   batch_size=32)
-    print(eval)
+    for model in model_list:
+        model.summary()
+        # Train model
+        training_history = model.fit_generator(
+                            train_generator.flow(x_train, y_train, batch_size=batch_size),
+                            steps_per_epoch=len(x_train) / batch_size,
+                            validation_data=validation_generator.flow(x_test, y_test, batch_size=batch_size),
+                            epochs=epochs,
+                            verbose=2
+                            )
+
+        print("training history:")
+        print(training_history.history)
+
+
+        # Evaluate the model
+        pred = model.evaluate_generator(train_generator.flow(x_test, y_test, batch_size=batch_size))
+        print("Evaluation results: ", pred)
+
+
+
     return 0
 
 
