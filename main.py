@@ -15,12 +15,12 @@ def main():
 
     # Set dataset directory variables
     home_dir = os.environ['HOME']
-    root_dir = os.path.join(home_dir, "resources/datasets/tiny-imagenet-200/tiny-imagenet-200") #path to imgnet root directory
+    root_dir = os.path.join(home_dir, "resources/datasets/tiny-imagenet-200") #path to imgnet root directory
     word_filename = os.path.join(root_dir, "words.txt")
     train_filename = os.path.join(root_dir, "wnids.txt")
     validation_filename = os.path.join(root_dir, "val/val_annotations.txt")
 
-    max_cat_size = 2
+    max_cat_size = 400
 
     # Parase images and create dataset
     parser = ImageNetParser()
@@ -87,8 +87,8 @@ def main():
                     ]
 
     # Set training hyper-parameteres
-    epochs = 4
-    batch_size = 32
+    epochs = 100
+    batch_size = 64
 
     i = 1
     for model in model_list:
