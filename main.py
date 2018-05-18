@@ -1,7 +1,10 @@
 import os
+import time
 
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
+
+import matplotlib.pyplot as plt
 
 from parser import ImageNetParser
 import models
@@ -17,7 +20,7 @@ def main():
     train_filename = os.path.join(root_dir, "wnids.txt")
     validation_filename = os.path.join(root_dir, "val/val_annotations.txt")
 
-    max_cat_size = 400
+    max_cat_size = 2
 
     # Parase images and create dataset
     parser = ImageNetParser()
@@ -75,13 +78,22 @@ def main():
 
     # Create model
     model_list = [
-                    models.alexnet_model1(input_dims, nb_labels)]
+                    models.linear_model(input_dims, nb_labels),
+                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam'),
+                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', norm=True),
+                    models.alexnet_model1(input_dims, nb_labels, 'sigmoid', 'adam'),
+                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'rmsprop'),
+                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd'),
+                    ]
 
     # Set training hyper-parameteres
-    epochs = 50
+    epochs = 4
     batch_size = 32
 
+    i = 1
     for model in model_list:
+        start = time.time()
+
         model.summary()
         # Train model
         training_history = model.fit_generator(
@@ -95,9 +107,27 @@ def main():
         print("training history:")
         print(training_history.history)
 
+        pred = model.evaluate_generator(train_generator.flow(x_test, y_test, batch_size=batch_size))
+
+        done = time.time()
+        elapsed = done - start
+        print("Training time: ")
+        print(elapsed)
+
+        plt.plot(range(epochs), training_history.history['val_loss'], 'r',
+                 range(epochs), training_history.history['loss'], 'b')
+        plt.savefig('loss-'+str(i)+'.png')
+        plt.gcf().clear()
+        plt.clf()
+
+        plt.plot(range(epochs), training_history.history['val_acc'], 'r',
+                 range(epochs), training_history.history['acc'], 'b')
+        plt.savefig('acc-'+str(i)+'.png')
+        plt.gcf().clear()
+        plt.clf()
+        i += 1
 
         # Evaluate the model
-        pred = model.evaluate_generator(train_generator.flow(x_test, y_test, batch_size=batch_size))
         print("Evaluation results: ", pred)
 
 
