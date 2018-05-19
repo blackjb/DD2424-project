@@ -13,6 +13,10 @@ def main():
     # Remove tensorflow warnings
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+	# Set pyplot backend to remove erro rwhen running over ssh
+    plt.switch_backend('agg')
+	
+
     # Set dataset directory variables
     home_dir = os.environ['HOME']
     root_dir = os.path.join(home_dir, "resources/datasets/tiny-imagenet-200") #path to imgnet root directory
@@ -20,7 +24,7 @@ def main():
     train_filename = os.path.join(root_dir, "wnids.txt")
     validation_filename = os.path.join(root_dir, "val/val_annotations.txt")
 
-    max_cat_size = 400
+    max_cat_size = 500
 
     # Parase images and create dataset
     parser = ImageNetParser()
@@ -61,9 +65,9 @@ def main():
     train_generator = ImageDataGenerator(
         featurewise_center=True,
         featurewise_std_normalization=True,
-        rotation_range=20,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
+        rotation_range=0,
+        width_shift_range=0,
+        height_shift_range=0,
         horizontal_flip=False)
     train_generator.fit(x_train)
 
@@ -78,12 +82,12 @@ def main():
 
     # Create model
     model_list = [
-                    models.linear_model(input_dims, nb_labels),
+                    #models.linear_model(input_dims, nb_labels),
                     models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam'),
                     models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', norm=True),
                     models.alexnet_model1(input_dims, nb_labels, 'sigmoid', 'adam'),
                     models.alexnet_model1(input_dims, nb_labels, 'relu', 'rmsprop'),
-                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd'),
+                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd')
                     ]
 
     # Set training hyper-parameteres
