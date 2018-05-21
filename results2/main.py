@@ -68,7 +68,7 @@ def main():
         rotation_range=0,
         width_shift_range=0,
         height_shift_range=0,
-        horizontal_flip=True)
+        horizontal_flip=False)
     train_generator.fit(x_train)
 
     validation_generator = ImageDataGenerator(
