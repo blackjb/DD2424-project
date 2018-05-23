@@ -68,7 +68,7 @@ def main():
         rotation_range=0,
         width_shift_range=0,
         height_shift_range=0,
-        horizontal_flip=False)
+        horizontal_flip=True)
     train_generator.fit(x_train)
 
     validation_generator = ImageDataGenerator(
@@ -88,12 +88,12 @@ def main():
                     #models.alexnet_model1(input_dims, nb_labels, 'tanh', 'adam'),
                     #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', norm=True),
                     #models.alexnet_model1(input_dims, nb_labels, 'relu', 'rmsprop'),
-                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd'),
+                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd'),
                     #models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd', dropout=0.2),
                     #models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd', dropout=0.5),
                     #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam'),
-                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', dropout=0.2),
-                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', dropout=0.5)
+                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', dropout=0.2),
+                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', dropout=0.5)
                     ]
 
     # Set training hyper-parameteres
