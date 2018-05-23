@@ -13,7 +13,7 @@ def main():
     # Remove tensorflow warnings
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-	# Set pyplot backend to remove erro rwhen running over ssh
+    # Set pyplot backend to remove erro rwhen running over ssh
     plt.switch_backend('agg')
 	
 
@@ -82,9 +82,7 @@ def main():
 
     # Create model
     model_list = [
-                    #models.linear_model(input_dims, nb_labels),
-                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam'),
-                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', norm=True),
+                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', dropout=0.5),
                     models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd', dropout=0.5),
                     ]
 
