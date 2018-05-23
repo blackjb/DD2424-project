@@ -85,13 +85,11 @@ def main():
                     #models.linear_model(input_dims, nb_labels),
                     #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam'),
                     #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', norm=True),
-                    models.alexnet_model1(input_dims, nb_labels, 'sigmoid', 'sgd'),
-                    models.alexnet_model1(input_dims, nb_labels, 'hard_sigmoid', 'sgd'),
-                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', dropout=0.5)
+                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd', dropout=0.5),
                     ]
 
     # Set training hyper-parameteres
-    epochs = 50
+    epochs = 75
     batch_size = 64
 
     i = 1
