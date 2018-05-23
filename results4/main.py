@@ -83,17 +83,11 @@ def main():
     # Create model
     model_list = [
                     #models.linear_model(input_dims, nb_labels),
-                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam'),
-                    #models.alexnet_model1(input_dims, nb_labels, 'sigmoid', 'adam'),
-                    #models.alexnet_model1(input_dims, nb_labels, 'tanh', 'adam'),
+                    models.alexnet_model2(input_dims, nb_labels, 'relu', 'adam'),
                     #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', norm=True),
+                    #models.alexnet_model1(input_dims, nb_labels, 'sigmoid', 'adam'),
                     #models.alexnet_model1(input_dims, nb_labels, 'relu', 'rmsprop'),
-                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd'),
-                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd', dropout=0.2),
-                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'sgd', dropout=0.5),
-                    #models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam'),
-                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', dropout=0.2),
-                    models.alexnet_model1(input_dims, nb_labels, 'relu', 'adam', dropout=0.5)
+                    models.alexnet_model2(input_dims, nb_labels, 'relu', 'sgd')
                     ]
 
     # Set training hyper-parameteres

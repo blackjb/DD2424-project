@@ -45,20 +45,22 @@ def conv_model(input_dims, nb_labels):
 
 
 
-def alexnet_model1(input_dims, nb_labels, activation, optimizer, norm=False):
+def alexnet_model1(input_dims, nb_labels, activation, optimizer, norm=False, dropout=0):
     model = models.Sequential()
 
-    model.add(layers.Convolution2D(48, 7, 3, input_shape=input_dims))
+    model.add(layers.Convolution2D(48, 7, 4, input_shape=input_dims))
     if norm:
         model.add(layers.BatchNormalization())
     model.add(layers.Activation(activation))
-    model.add(layers.MaxPool2D(pool_size=(3, 3), strides=(2,2), padding='valid'))
+    model.add(layers.MaxPool2D(pool_size=(3, 3), strides=(2, 2), padding='valid'))
+    #model.add(layers.MaxPool2D(pool_size=(3, 3), padding='valid'))
 
     model.add(layers.Convolution2D(128, 5, 1))
     if norm:
         model.add(layers.BatchNormalization())
     model.add(layers.Activation(activation))
-    model.add(layers.MaxPool2D(pool_size=(3, 3), strides=(2,2), padding='valid'))
+    model.add(layers.MaxPool2D(pool_size=(3, 3), strides=(2, 2), padding='valid'))
+    #model.add(layers.MaxPool2D(pool_size=(3, 3), padding='valid'))
 
     model.add(layers.Convolution2D(192, 3, 1))
 
@@ -66,12 +68,17 @@ def alexnet_model1(input_dims, nb_labels, activation, optimizer, norm=False):
 
     model.add(layers.Convolution2D(128, 3, 1))
     model.add(layers.Activation(activation))
-    model.add(layers.MaxPool2D(pool_size=(3, 3), strides=(2,2), padding='valid'))
+    model.add(layers.MaxPool2D(pool_size=(3, 3), strides=(2, 2), padding='valid'))
+    #model.add(layers.MaxPool2D(pool_size=(3, 3), padding='valid'))
 
     #Fully conected end layers
     model.add(layers.Flatten())
     model.add(layers.Dense(2048, activation=activation))
+    if dropout != 0:
+        model.add(layers.Dropout(dropout))
     model.add(layers.Dense(2048, activation=activation))
+    if dropout != 0:
+        model.add(layers.Dropout(dropout))
     model.add(layers.Dense(nb_labels, activation='softmax'))
     model.compile(loss='categorical_crossentropy',
                   optimizer=optimizer,
@@ -104,8 +111,8 @@ def alexnet_model2(input_dims, nb_labels, activation, optimizer, norm=False):
 
     #Fully conected end layers
     model.add(layers.Flatten())
-    model.add(layers.Dense(4096, activation=activation))
-    model.add(layers.Dense(4096, activation=activation))
+    model.add(layers.Dense(2048, activation=activation))
+    model.add(layers.Dense(2048, activation=activation))
     model.add(layers.Dense(nb_labels, activation='softmax'))
     model.compile(loss='categorical_crossentropy',
                   optimizer=optimizer,
